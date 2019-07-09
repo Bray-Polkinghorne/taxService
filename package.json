@@ -1,0 +1,25 @@
+{
+  "name": "taxsitedemo",
+  "version": "1.0.0",
+  "description": "demo service",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "api",
+    "restful",
+    "json"
+  ],
+  "author": "Bray Polkinghorne",
+  "license": "ISC",
+  "dependencies": {
+    "bcrypt": "*",
+    "body-parser": "*",
+    "express": "*",
+    "jsonwebtoken": "^8.5.1",
+    "mongoose": "*",
+    "passport": "*",
+    "passport-http": "*"
+  }
+}
