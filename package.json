@@ -20,6 +20,8 @@
     "jsonwebtoken": "^8.5.1",
     "mongoose": "*",
     "passport": "*",
-    "passport-http": "*"
+    "passport-http": "*",
+    "passport-oauth": "^1.0.0",
+    "prompts": "^2.1.0"
   }
 }
