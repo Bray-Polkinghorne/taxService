@@ -31,6 +31,7 @@ passport.use(new BasicStrategy(
             });
       }
 ));
+
 app.get('/rate', passport.authenticate('basic', {session: false}), function(req, res){
       Rate.find({}).then(eachOne =>{
             res.json(eachOne);
@@ -56,6 +57,29 @@ app.get('/auth',
       }
 );
 //end basic auth routes
+function findUser(data){
+      User.findOne({username: data}, function(err, result){
+            if(err) throw err;
+            if(data === result.username){
+                  return true;
+            }
+            else {
+                  return false;
+            }
+      })
+}
+
+function findPass(data, done){
+      User.findOne({password: data}, function(err, result){
+            if(err) throw err;
+            if(data === bcrypt.compareSync(password, result.password)){
+                  return true;
+            }
+            else {
+                  return false;
+            }
+      })
+}
 
 //begin token auth and routes
 app.post('/user/login', function(req, res, next) {
@@ -66,7 +90,7 @@ app.post('/user/login', function(req, res, next) {
 
       //checking to make sure the user entered the correct username/password combo
       //
-      if(username === User.username && password === User.password) {
+      if(findUser(username) && findPass(password)) {
             //if user log in success, generate a JWT token for the user with a secret key
             jwt.sign({User}, 'privatekey', { expiresIn: '1h' },(err, token) => {
                 if(err) { console.log(err) }
