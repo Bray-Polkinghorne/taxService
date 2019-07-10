@@ -109,7 +109,7 @@ app.get('/user/data', checkToken, (req, res) => {
             Rate.find({}).then(eachOne =>{
                   res.json(eachOne);
             });
-            console.log('SUCCESS: Connected to protected route');
+            console.log('SUCCESS: Connected to protected data route');
         }
     })
 });
@@ -128,7 +128,7 @@ app.get('/user/data/:rate_short', checkToken, (req, res) => {
                   }
                   //res.json(rate)
             });
-            console.log('SUCCESS: Connected to protected route');
+            console.log('SUCCESS: Connected to protected specific data route');
         }
     })
 });
