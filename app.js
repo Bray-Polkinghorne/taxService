@@ -24,6 +24,7 @@ var port = process.env.PORT || 8080;
 passport.use(new BasicStrategy(
       function(username, password, done) {
             User.findOne({ username: username }, function(err, user){
+                  console.log(user.username+ " " + user.password);
                   if (user && bcrypt.compareSync(password, user.password)){
                         return done(null, user);
                   }
@@ -57,52 +58,31 @@ app.get('/auth',
       }
 );
 //end basic auth routes
-function findUser(data){
-      User.findOne({username: data}, function(err, result){
-            if(err) throw err;
-            if(data === result.username){
-                  return true;
-            }
-            else {
-                  return false;
-            }
-      })
-}
-
-function findPass(data, done){
-      User.findOne({password: data}, function(err, result){
-            if(err) throw err;
-            if(data === bcrypt.compareSync(password, result.password)){
-                  return true;
-            }
-            else {
-                  return false;
-            }
-      })
-}
 
 //begin token auth and routes
-app.post('/user/login', function(req, res, next) {
-
+app.post('/user/login', (req, res, next) => {
       const { body } = req;
       const { username } = body;
       const { password } = body;
 
       //checking to make sure the user entered the correct username/password combo
-      //
-      if(findUser(username) && findPass(password)) {
-            //if user log in success, generate a JWT token for the user with a secret key
-            jwt.sign({User}, 'privatekey', { expiresIn: '1h' },(err, token) => {
-                if(err) { console.log(err) }
-                res.send(token);
-            });
+      User.findOne({username: username}, function(err, user){
+            console.log("test1.2");
+            if (user && bcrypt.compareSync(password, user.password)){
+                  console.log("test2")
+                  //if user log in success, generate a JWT token for the user with a secret key
+                  jwt.sign({User}, 'privatekey', { expiresIn: '1h' },(err, token) => {
+                      if(err) { console.log(err) }
+                      res.send(token);
+                  });
+                  console.log("test 3");
             }
-      else {console.log('ERROR: Could not log in');}
-      // console.log("test");
-
+            else {
+                  console.log('ERROR: Could not log in')
+            }
+      });
 })
-    //Check to make sure header is not undefined, if so, return Forbidden (403)
-
+//Check to make sure header is not undefined, if so, return Forbidden (403)
 const checkToken = (req, res, next) => {
       const header = req.headers['authorization'];
 
