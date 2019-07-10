@@ -45,9 +45,8 @@ app.get('/rate/:rate_short', passport.authenticate('basic', {session: false}), f
             //res.json(rate)
       });
 });
-app.get('/auth',
-      passport.authenticate('basic', {session: false, successRedirect: '/rate'}), function (req, res){
-            res.send('Authenticated ' + req.user.username);
+app.get('/auth', passport.authenticate('basic', {session: false}), function (req, res){
+            res.send(req.user.username);
       }
 );
 app.get('/', (req, res) => res.send('Tax Rates. Yay'));
@@ -59,24 +58,12 @@ app.get('/auth',
 //end basic auth routes
 
 //begin token auth and routes
-app.post('/user/login', (req, res, next) => {
-      const { body } = req;
-      const { username } = body;
-      const { password } = body;
+app.get('/user/login', passport.authenticate('basic', {session: false}), function(req, res) {
 
-      //checking to make sure the user entered the correct username/password combo
-      User.findOne({username: username}, function(err, user){
-            if (user && bcrypt.compareSync(password, user.password)){
-                  //if user log in success, generate a JWT token for the user with a secret key
-                  jwt.sign({User}, 'privatekey', { expiresIn: '1h' },(err, token) => {
-                      if(err) { console.log(err) }
-                      console.log('Success: key generated')
-                      res.send(token);
-                  });
-            }
-            else {
-                  console.log('ERROR: Could not log in')
-            }
+      jwt.sign({User}, 'privatekey', { expiresIn: '1h' },(err, token) => {
+          if(err) { console.log(err) }
+          console.log('Success: key generated')
+          res.send(token);
       });
 })
 //Check to make sure header is not undefined, if so, return Forbidden (403)
