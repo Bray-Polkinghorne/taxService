@@ -9,7 +9,6 @@ const User = require('./user');
 const Rate = require('./rate');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const prompts = require('prompts');
 
 app.use(bodyParser.urlencoded({ extended: true}));
 app.use(bodyParser.json());
@@ -24,7 +23,6 @@ var port = process.env.PORT || 8080;
 passport.use(new BasicStrategy(
       function(username, password, done) {
             User.findOne({ username: username }, function(err, user){
-                  console.log(user.username+ " " + user.password);
                   if (user && bcrypt.compareSync(password, user.password)){
                         return done(null, user);
                   }
@@ -39,6 +37,7 @@ app.get('/rate', passport.authenticate('basic', {session: false}), function(req,
       });
 });
 app.get('/rate/:rate_short', passport.authenticate('basic', {session: false}), function(req, res){
+      req.params.rate_short = req.params.rate_short.toUpperCase();
       Rate.find({'short': req.params.rate_short}).then(function(err, rate){
             if (err){
                   res.send(err)
@@ -67,15 +66,13 @@ app.post('/user/login', (req, res, next) => {
 
       //checking to make sure the user entered the correct username/password combo
       User.findOne({username: username}, function(err, user){
-            console.log("test1.2");
             if (user && bcrypt.compareSync(password, user.password)){
-                  console.log("test2")
                   //if user log in success, generate a JWT token for the user with a secret key
                   jwt.sign({User}, 'privatekey', { expiresIn: '1h' },(err, token) => {
                       if(err) { console.log(err) }
+                      console.log('Success: key generated')
                       res.send(token);
                   });
-                  console.log("test 3");
             }
             else {
                   console.log('ERROR: Could not log in')
