@@ -1,4 +1,3 @@
-const config = require('./config.json');
 const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
@@ -20,6 +19,9 @@ var db = mongoose.connection;
 var port = process.env.PORT || 8080;
 
 //begin basic auth and routes
+      //authenticate user via passport.
+      //Get username and password from input
+      //then compare with the username and password in 'users' database
 passport.use(new BasicStrategy(
       function(username, password, done) {
             User.findOne({ username: username }, function(err, user){
@@ -30,7 +32,8 @@ passport.use(new BasicStrategy(
             });
       }
 ));
-//passport.authenticate('basic', {session: false}),
+// use 'passport.authenticate('basic', {session: false})' to make a route require Basic auth
+
 app.get('/rate', function(req, res){
       Rate.find({}).then(eachOne =>{
             console.log("got data");
@@ -58,6 +61,7 @@ app.get('/auth',
 //end basic auth routes
 
 //begin token auth and routes
+//checkToken to verify correct token is being given
 //Check to make sure header is not undefined, if so, return Forbidden (403)
 const checkToken = (req, res, next) => {
       const header = req.headers['authorization'];
@@ -73,7 +77,7 @@ const checkToken = (req, res, next) => {
         res.sendStatus(403)
       }
 }
-
+//first using same basic auth to verify user to give token
 app.get('/user/login', passport.authenticate('basic', {session: false}), function(req, res) {
       jwt.sign({User}, 'privatekey', { expiresIn: '1h' },(err, token) => {
           if(err) { console.log(err) }
@@ -90,7 +94,7 @@ app.get('/user/data', checkToken, (req, res) => {
             console.log('ERROR: Could not connect to the protected route');
             res.sendStatus(403);
         } else {
-            //If token is successfully verified, we can send the autorized data
+            //If token is successfully verified, we can send the autorized data of all states sales tax in db
             Rate.find({}).then(eachOne =>{
                   res.json(eachOne);
             });
@@ -106,7 +110,7 @@ app.get('/user/data/:rate_short', checkToken, (req, res) => {
             console.log('ERROR: Could not connect to the protected route');
             res.sendStatus(403);
         } else {
-            //If token is successfully verified, we can send the autorized data
+            //If token is successfully verified, we can send the autorized data of specified state sales tax
             Rate.find({'short': req.params.rate_short}).then(function(err, rate){
                   if (err){
                         res.send(err)
@@ -119,8 +123,9 @@ app.get('/user/data/:rate_short', checkToken, (req, res) => {
 });
 //end token auth and routes
 
-//uncomment section below and run once to hash password in database for user
-//pretty jank, but it works
+//TO HASH A NEW USERS PASSWORD
+//uncomment below section and run file once. Then recomment.
+//I know it's not efficent, but it works
 // var user = User.findOne({username: "Bray"}, function(err, user){
 //       user.password = 'test';
 //       user.save(function(err){

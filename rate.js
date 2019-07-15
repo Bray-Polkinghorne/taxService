@@ -1,7 +1,6 @@
 const mongoose = require('mongoose');
 
-//may have to change schema to match DI names in NW
-//this also means changing the structure in mongodb to match
+//schema for sales tax rate that is stored in the db of rates
 const rateSchema = mongoose.Schema({
       state: String,
       short: String,
