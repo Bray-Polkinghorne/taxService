@@ -1,1 +1,11 @@
 /node_modules
+/.ssh
+/.npm
+/.cache
+/.bash_history
+/.bash_logout
+/.bashrc
+/.dbshell
+/.mongorc.js
+/.profile
+/.sudo_as_admin_successful
