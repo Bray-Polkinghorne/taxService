@@ -1,0 +1,15 @@
+show dbs
+use tax
+db.rates.insert({state: "Colorado", short: "CO", rate: 8.31} )
+db.rates.find()
+db.rates.insert({state: "California", short: "CA", rate: 7.25})
+db.rates.insert({state: "Texas", short: "TX", rate: 6.25})
+db.rates.find()
+db.users.insert({username: "Bray", password: "$2b$08$pIlzXef9Qjd4/1a/5O7SMeILoMZQlODSgangY3Z30/ZNiwHQ9fJ22"})
+db.users.find()
+show dbs
+grep dbPath /etc/mongod/conf
+show dbs
+use tax
+show collections
+db.users.find()
