@@ -30,9 +30,10 @@ passport.use(new BasicStrategy(
             });
       }
 ));
-
-app.get('/rate', passport.authenticate('basic', {session: false}), function(req, res){
+//passport.authenticate('basic', {session: false}),
+app.get('/rate', function(req, res){
       Rate.find({}).then(eachOne =>{
+            console.log("got data");
             res.json(eachOne);
       });
 });
@@ -46,9 +47,8 @@ app.get('/rate/:rate_short', passport.authenticate('basic', {session: false}), f
       });
 });
 app.get('/auth', passport.authenticate('basic', {session: false}), function (req, res){
-            res.send(req.user.username);
-      }
-);
+            res.send('Authenticated ' + req.user.username);
+      });
 app.get('/', (req, res) => res.send('Tax Rates. Yay'));
 app.get('/auth',
       passport.authenticate('basic', {session: false, successRedirect: '/rate'}), function (req, res){
@@ -58,14 +58,6 @@ app.get('/auth',
 //end basic auth routes
 
 //begin token auth and routes
-app.get('/user/login', passport.authenticate('basic', {session: false}), function(req, res) {
-
-      jwt.sign({User}, 'privatekey', { expiresIn: '1h' },(err, token) => {
-          if(err) { console.log(err) }
-          console.log('Success: key generated')
-          res.send(token);
-      });
-})
 //Check to make sure header is not undefined, if so, return Forbidden (403)
 const checkToken = (req, res, next) => {
       const header = req.headers['authorization'];
@@ -81,6 +73,15 @@ const checkToken = (req, res, next) => {
         res.sendStatus(403)
       }
 }
+
+app.get('/user/login', passport.authenticate('basic', {session: false}), function(req, res) {
+      jwt.sign({User}, 'privatekey', { expiresIn: '1h' },(err, token) => {
+          if(err) { console.log(err) }
+          console.log('Success: key generated')
+
+          res.send(JSON.stringify({"token": token}));
+      });
+})
 app.get('/user/data', checkToken, (req, res) => {
     //verify the JWT token generated for the user
     jwt.verify(req.token, 'privatekey', (err, authorizedData) => {
