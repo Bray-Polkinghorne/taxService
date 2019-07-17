@@ -16,6 +16,7 @@
   "dependencies": {
     "bcrypt": "*",
     "body-parser": "*",
+    "cors": "^2.8.5",
     "express": "*",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^5.6.4",

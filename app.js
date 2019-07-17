@@ -8,6 +8,7 @@ const User = require('./user');
 const Rate = require('./rate');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const cors = require('cors');
 
 app.use(bodyParser.urlencoded({ extended: true}));
 app.use(bodyParser.json());
@@ -34,13 +35,21 @@ passport.use(new BasicStrategy(
 ));
 // use 'passport.authenticate('basic', {session: false})' to make a route require Basic auth
 
+//allow any site to access api calls
+// app.use(function (req, res, next){
+//       res.setHeader("Access-Control-Allow-Origin", "*");
+//       next();
+// });
+
+app.use(cors());
+
 app.get('/rate', function(req, res){
       Rate.find({}).then(eachOne =>{
             console.log("got data");
             res.json(eachOne);
       });
 });
-app.get('/rate/:rate_short', passport.authenticate('basic', {session: false}), function(req, res){
+app.get('/rate/:rate_short', function(req, res){
       req.params.rate_short = req.params.rate_short.toUpperCase();
       Rate.find({'short': req.params.rate_short}).then(function(err, rate){
             if (err){
