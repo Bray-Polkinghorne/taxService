@@ -33,28 +33,23 @@ passport.use(new BasicStrategy(
             });
       }
 ));
-// use 'passport.authenticate('basic', {session: false})' to make a route require Basic auth
-
-//allow any site to access api calls
-// app.use(function (req, res, next){
-//       res.setHeader("Access-Control-Allow-Origin", "*");
-//       next();
-// });
+// use 'passport.authenticate('basic', {session: false}), ' to make a route require Basic auth
 
 app.use(cors());
 
-app.get('/rate', function(req, res){
+app.get('/rate', passport.authenticate('basic', {session: false}), function(req, res){
       Rate.find({}).then(eachOne =>{
-            console.log("got data");
+            console.log("got all data");
             res.json(eachOne);
       });
 });
-app.get('/rate/:rate_short', function(req, res){
+app.get('/rate/:rate_short', passport.authenticate('basic', {session: false}), function(req, res){
       req.params.rate_short = req.params.rate_short.toUpperCase();
       Rate.find({'short': req.params.rate_short}).then(function(err, rate){
             if (err){
                   res.send(err)
             }
+            console.log("got " + req.params.rate_short + " data");
             //res.json(rate)
       });
 });
@@ -135,8 +130,8 @@ app.get('/user/data/:rate_short', checkToken, (req, res) => {
 //TO HASH A NEW USERS PASSWORD
 //uncomment below section and run file once. Then recomment.
 //I know it's not efficent, but it works
-// var user = User.findOne({username: "Bray"}, function(err, user){
-//       user.password = 'test';
+// var user = User.findOne({username: "bray.polkinghorne@nextworld.net"}, function(err, user){
+//       user.password = 'Bray8951!!';
 //       user.save(function(err){
 //             if(err){return console.log('not saved')}
 //             console.log('saved')
