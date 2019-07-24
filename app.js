@@ -36,6 +36,7 @@ passport.use(new BasicStrategy(
 //allows cross origin
 app.use(cors());
 
+app.get('/', (req, res) => res.send('Tax Rates. Yay'));
 app.get('/rate', passport.authenticate('basic', {session: false}), function(req, res){
       Rate.find({}).then(eachOne =>{
             console.log("got all data");
@@ -52,15 +53,6 @@ app.get('/rate/:rate_short', passport.authenticate('basic', {session: false}), f
             //res.json(rate)
       });
 });
-app.get('/auth', passport.authenticate('basic', {session: false}), function (req, res){
-            res.send('Authenticated ' + req.user.username);
-      });
-app.get('/', (req, res) => res.send('Tax Rates. Yay'));
-app.get('/auth',
-      passport.authenticate('basic', {session: false, successRedirect: '/rate'}), function (req, res){
-            res.send('Authenticated ' + req.user.name);
-      }
-);
 //end basic auth routes
 
 //begin token auth and routes
