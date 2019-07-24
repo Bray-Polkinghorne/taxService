@@ -14,7 +14,6 @@ app.use(bodyParser.urlencoded({ extended: true}));
 app.use(bodyParser.json());
 
 mongoose.connect('mongodb://localhost:27017/tax', {useNewUrlParser: true});
-
 var db = mongoose.connection;
 // Setup server port
 var port = process.env.PORT || 8080;
@@ -33,8 +32,8 @@ passport.use(new BasicStrategy(
             });
       }
 ));
-// use 'passport.authenticate('basic', {session: false}), ' to make a route require Basic auth
 
+//allows cross origin
 app.use(cors());
 
 app.get('/rate', passport.authenticate('basic', {session: false}), function(req, res){
@@ -65,8 +64,8 @@ app.get('/auth',
 //end basic auth routes
 
 //begin token auth and routes
-//checkToken to verify correct token is being given
-//Check to make sure header is not undefined, if so, return Forbidden (403)
+    //checkToken to verify correct token is being given
+    //Check to make sure header is not undefined, if so, return Forbidden (403)
 const checkToken = (req, res, next) => {
       const header = req.headers['authorization'];
 
@@ -81,12 +80,11 @@ const checkToken = (req, res, next) => {
         res.sendStatus(403)
       }
 }
-//first using same basic auth to verify user to give token
+//first using the same basic auth to verify user and give token
 app.get('/user/login', passport.authenticate('basic', {session: false}), function(req, res) {
       jwt.sign({User}, 'privatekey', { expiresIn: '1h' },(err, token) => {
           if(err) { console.log(err) }
           console.log('Success: key generated')
-
           res.send(JSON.stringify({"token": token}));
       });
 })
@@ -131,8 +129,8 @@ app.get('/user/data/:rate_short', checkToken, (req, res) => {
 //TO HASH A NEW USERS PASSWORD
 //uncomment below section and run file once. Then recomment.
 //I know it's not efficent, but it works
-// var user = User.findOne({username: "bray.polkinghorne@nextworld.net"}, function(err, user){
-//       user.password = 'Bray8951!!';
+// var user = User.findOne({username: "enter-username-here"}, function(err, user){
+//       user.password = 'enter-password-here';
 //       user.save(function(err){
 //             if(err){return console.log('not saved')}
 //             console.log('saved')
