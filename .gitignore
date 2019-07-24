@@ -9,3 +9,4 @@
 /.mongorc.js
 /.profile
 /.sudo_as_admin_successful
+/package-lock.json
