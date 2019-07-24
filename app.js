@@ -114,6 +114,7 @@ app.get('/user/data/:rate_short', checkToken, (req, res) => {
             console.log('ERROR: Could not connect to the protected route');
             res.sendStatus(403);
         } else {
+            req.params.rate_short = req.params.rate_short.toUpperCase();
             //If token is successfully verified, we can send the autorized data of specified state sales tax
             Rate.find({'short': req.params.rate_short}).then(function(err, rate){
                   if (err){
