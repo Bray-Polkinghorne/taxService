@@ -17,7 +17,7 @@
     "bcrypt": "*",
     "body-parser": "*",
     "cors": "^2.8.5",
-    "express": "*",
+    "express": "^4.17.1",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^5.6.4",
     "passport": "*",
