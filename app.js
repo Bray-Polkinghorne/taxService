@@ -36,6 +36,9 @@ passport.use(new BasicStrategy(
 //allows cross origin
 app.use(cors());
 
+app.post('/post', passport.authenticate('basic', {session: false}), function(req, res){
+    res.json('saefunhsaeracfriweh84tvq84r8tb7r6b');
+});
 app.get('/', (req, res) => res.send('Tax Rates. Yay'));
 app.get('/rate', passport.authenticate('basic', {session: false}), function(req, res){
       Rate.find({}).then(eachOne =>{
