@@ -37,7 +37,7 @@ passport.use(new BasicStrategy(
 app.use(cors());
 
 app.post('/post', passport.authenticate('basic', {session: false}), function(req, res){
-    let body:{
+    let body = {
         'access_token': 'saefunhsaeracfriweh84tvq84r8tb7r6b'
     }
     res.json(body);
