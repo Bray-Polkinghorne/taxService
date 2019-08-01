@@ -16,7 +16,7 @@ app.use(bodyParser.json());
 mongoose.connect('mongodb://localhost:27017/tax', {useNewUrlParser: true});
 var db = mongoose.connection;
 // Setup server port
-var port = process.env.PORT || 8080;
+var port = process.env.PORT || 80;
 
 //begin basic auth and routes
       //authenticate user via passport.
